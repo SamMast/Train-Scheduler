@@ -95,6 +95,7 @@ database.ref().on("child_added", function(snapshot) {
     var diffTime = moment().diff(moment(startTimeConverted, "minutes"));
     console.log("DIFFERENCE IN TIME: " + diffTime);
 
+
     // Time apart (remainder)
     var tRemainder = diffTime % snapshot.val().frequency;
     console.log(diffTime + " / " + snapshot.val().frequency + " = ")
@@ -111,7 +112,7 @@ database.ref().on("child_added", function(snapshot) {
 
       // Change the HTML to reflect
 
-      $("#newTrain").append("<tr><td id='name'>" + snapshot.val().name + "</td><td id='destination'>" + snapshot.val().destination + "</td><td id='frequency'>" + snapshot.val().frequency + "</td><td id='nextTime'>" + moment(nextTime).format("llll") + "</td><td id='minutesAway'>" + minutesAway + "</td><td><button class='btn btn-danger' id='deleteButton' data-id=" + snapshot.key + ">-</button></td></tr>"
+      $("#newTrain").append("<tr><td id='name'>" + snapshot.val().name + "</td><td id='destination'>" + snapshot.val().destination + "</td><td id='frequency'>" + snapshot.val().frequency + "</td><td id='nextTime'>" + moment(nextTime).format("llll") + "</td><td id='minutesAway'>" + minutesAway + "</td><td><button class='btn btn-danger' id='deleteButton' data-id=" + snapshot.key + "><span class='glyphicon glyphicon-minus'></span></button><button class='btn btn-primary' id='updateButton' data-id=" + snapshot.key + "><span class='glyphicon glyphicon-pencil'></span></button></td></tr>"
         );
 
     // Handle the errors
