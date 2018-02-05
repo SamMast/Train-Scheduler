@@ -81,16 +81,16 @@ $("table").on("click", "#deleteButton", function() {
 database.ref().on("child_added", function(snapshot) {
 
     // Log everything that's coming out of snapshot
-    console.log(snapshot.val());
+    // console.log(snapshot.val());
     var firstTrainTime = snapshot.val().startTime;
     var frequency = snapshot.val().frequency;
 
     var startTimeConverted = moment(firstTrainTime, "hh:mm").subtract(1, "years");
-    console.log(startTimeConverted);
+    // console.log(startTimeConverted);
 
     // Current Time
     var currentTime = moment();
-    console.log(currentTime);
+    // console.log(currentTime);
 
     // Difference between the times
     var diffTime = moment().diff(moment(startTimeConverted), "minutes");
@@ -100,8 +100,7 @@ database.ref().on("child_added", function(snapshot) {
 
     // Time apart (remainder)
     var tRemainder = diffTime % frequency;
-    console.log(diffTime + " / " + frequency+ " = ")
-    console.log(tRemainder);
+    // console.log(tRemainder);
 
     // Minute Until Train
     var minutesAway = frequency - tRemainder;
@@ -153,7 +152,7 @@ var refreshPage = function() {
         );
     });
   });
-  setTimeout(function(){refreshPage();}, 1000 * 20);
+  setTimeout(function(){refreshPage();}, 1000 * 60);
 }
 
-setTimeout(function(){refreshPage();}, 1000 * 20);
+setTimeout(function(){refreshPage();}, 1000 * 60);
