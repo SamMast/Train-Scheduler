@@ -78,41 +78,42 @@ $("table").on("click", "#deleteButton", function() {
 });
 
 
-
-
 database.ref().on("child_added", function(snapshot) {
 
     // Log everything that's coming out of snapshot
     console.log(snapshot.val());
-    var startTimeConverted = moment(snapshot.val().startTime, "HH:mm").subtract(1, "years")._i;
+    var firstTrainTime = snapshot.val().startTime;
+    var frequency = snapshot.val().frequency;
+
+    var startTimeConverted = moment(firstTrainTime, "hh:mm").subtract(1, "years");
     console.log(startTimeConverted);
 
     // Current Time
-    var currentTime = moment().format("HH:mm");
+    var currentTime = moment();
     console.log(currentTime);
 
     // Difference between the times
-    var diffTime = moment().diff(moment(startTimeConverted, "minutes"));
+    var diffTime = moment().diff(moment(startTimeConverted), "minutes");
+
     console.log("DIFFERENCE IN TIME: " + diffTime);
 
 
     // Time apart (remainder)
-    var tRemainder = diffTime % snapshot.val().frequency;
-    console.log(diffTime + " / " + snapshot.val().frequency + " = ")
+    var tRemainder = diffTime % frequency;
+    console.log(diffTime + " / " + frequency+ " = ")
     console.log(tRemainder);
 
     // Minute Until Train
-    var minutesAway = snapshot.val().frequency - tRemainder;
+    var minutesAway = frequency - tRemainder;
     console.log("MINUTES TILL TRAIN: " + minutesAway);
 
     // Next Train
     var nextTime = moment().add(minutesAway, "minutes");
     console.log("ARRIVAL TIME: " + moment(nextTime).format("hh:mm"));
 
-
       // Change the HTML to reflect
 
-      $("#newTrain").append("<tr><td id='name'>" + snapshot.val().name + "</td><td id='destination'>" + snapshot.val().destination + "</td><td id='frequency'>" + snapshot.val().frequency + "</td><td id='nextTime'>" + moment(nextTime).format("llll") + "</td><td id='minutesAway'>" + minutesAway + "</td><td><button class='btn btn-danger' id='deleteButton' data-id=" + snapshot.key + "><span class='glyphicon glyphicon-minus'></span></button><button class='btn btn-primary' id='updateButton' data-id=" + snapshot.key + "><span class='glyphicon glyphicon-pencil'></span></button></td></tr>"
+      $("#newTrain").append("<tr class='table-data'><td id='name'>" + snapshot.val().name + "</td><td id='destination'>" + snapshot.val().destination + "</td><td id='frequency'>" + snapshot.val().frequency + "</td><td id='nextTime'>" + moment(nextTime).format("llll") + "</td><td id='minutesAway'>" + minutesAway + "</td><td><button class='btn btn-danger col-md-4 col-md-offset-2 col-xs-4 col-xs-offset-2 col-sm-4 col-sm-offset-2 col-lg-4 col-lg-offset-2' id='deleteButton' data-id=" + snapshot.key + "><span class='glyphicon glyphicon-minus'></span></button></td></tr>"
         );
 
     // Handle the errors
@@ -122,3 +123,47 @@ database.ref().on("child_added", function(snapshot) {
       console.log("Errors handled: " + errorObject.code);
 
     });
+
+var refreshPage = function() {
+  $(".table-data").remove();
+  database.ref().on('value', function(snap) {
+      snap.forEach(function(snapshot) {
+      var firstTrainTime = snapshot.val().startTime;
+      var frequency = snapshot.val().frequency;
+
+      var startTimeConverted = moment(firstTrainTime, "hh:mm").subtract(1, "years");
+      console.log(startTimeConverted);
+
+      // Current Time
+      var currentTime = moment();
+      console.log(currentTime);
+
+      // Difference between the times
+      var diffTime = moment().diff(moment(startTimeConverted), "minutes");
+
+      console.log("DIFFERENCE IN TIME: " + diffTime);
+
+
+      // Time apart (remainder)
+      var tRemainder = diffTime % frequency;
+      console.log(diffTime + " / " + frequency+ " = ")
+      console.log(tRemainder);
+
+      // Minute Until Train
+      var minutesAway = frequency - tRemainder;
+      console.log("MINUTES TILL TRAIN: " + minutesAway);
+
+      // Next Train
+      var nextTime = moment().add(minutesAway, "minutes");
+      console.log("ARRIVAL TIME: " + moment(nextTime).format("hh:mm"));
+
+      // Change the HTML to reflect
+
+      $("#newTrain").append("<tr class='table-data'><td id='name'>" + snapshot.val().name + "</td><td id='destination'>" + snapshot.val().destination + "</td><td id='frequency'>" + snapshot.val().frequency + "</td><td id='nextTime'>" + moment(nextTime).format("llll") + "</td><td id='minutesAway'>" + minutesAway + "</td><td><button class='btn btn-danger col-md-4 col-md-offset-2 col-xs-4 col-xs-offset-2 col-sm-4 col-sm-offset-2 col-lg-4 col-lg-offset-2' id='deleteButton' data-id=" + snapshot.key + "><span class='glyphicon glyphicon-minus'></span></button></td></tr>"
+        );
+    });
+  });
+  setTimeout(function(){refreshPage();}, 1000 * 20);
+}
+
+setTimeout(function(){refreshPage();}, 1000 * 20);

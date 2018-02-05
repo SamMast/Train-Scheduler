@@ -6,3 +6,8 @@ body {
 #removeButton {
 	margin:5px;
 }
+
+#name,
+#destination {
+	text-transform: capitalize;
+}
